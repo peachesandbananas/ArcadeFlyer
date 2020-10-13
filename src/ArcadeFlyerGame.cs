@@ -14,8 +14,6 @@ namespace ArcadeFlyer2D
 
         // Player Character Graphic
         private Texture2D playerImage; 
-
-        private int wabbah;
         
         // Initalized the game
         public ArcadeFlyerGame()
