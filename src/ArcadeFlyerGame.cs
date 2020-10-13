@@ -13,7 +13,9 @@ namespace ArcadeFlyer2D
         private SpriteBatch spriteBatch;
 
         // Player Character Graphic
-        private Texture2D playerImage;
+        private Texture2D playerImage; 
+
+        private int wabbah;
         
         // Initalized the game
         public ArcadeFlyerGame()
