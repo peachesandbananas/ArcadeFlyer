@@ -13,13 +13,17 @@ namespace ArcadeFlyer2D
         // The speed at which the player can move
         private float movementSpeed = 4.0f;
 
+        private Timer cooldownTimer;
+
         // Initialize a player
-        public Player(ArcadeFlyerGame root, Vector2 position) : base(position)
+        public Player(ArcadeFlyerGame root, Vector2 Position) : base(Position)
         {
             // Initialize values
             this.root = root;
-            this.position = position;
+            this.Position = Position;
             this.SpriteWidth = 128.0f;
+
+            cooldownTimer = new Timer(0.5f);
 
             // Load the content for the player
             LoadContent();
@@ -32,37 +36,50 @@ namespace ArcadeFlyer2D
             this.SpriteImage = root.Content.Load<Texture2D>("MainChar");
         }
 
-        // Update position based on input
+        // Update Position based on input
         private void HandleInput(KeyboardState currentKeyboardState)
         {
             // Get all the key states
-            bool upKeyPressed = currentKeyboardState.IsKeyDown(Keys.Up);
-            bool downKeyPressed = currentKeyboardState.IsKeyDown(Keys.Down);
-            bool leftKeyPressed = currentKeyboardState.IsKeyDown(Keys.Left);
-            bool rightKeyPressed = currentKeyboardState.IsKeyDown(Keys.Right);
+            bool upKeyPressed = currentKeyboardState.IsKeyDown(Keys.W);
+            bool downKeyPressed = currentKeyboardState.IsKeyDown(Keys.S);
+            bool leftKeyPressed = currentKeyboardState.IsKeyDown(Keys.A);
+            bool rightKeyPressed = currentKeyboardState.IsKeyDown(Keys.D);
+            bool spaceKeyPressed = currentKeyboardState.IsKeyDown(Keys.Space);
 
-            // If Up is pressed, decrease position Y
+            // If Up is pressed, decrease Position Y
             if (upKeyPressed)
             {
                 position.Y -= movementSpeed;
             }
             
-            // If Down is pressed, increase position Y
+            // If Down is pressed, increase Position Y
             if (downKeyPressed)
             {
                 position.Y += movementSpeed;
             }
             
-            // If Left is pressed, decrease position X
+            // If Left is pressed, decrease Position X
             if (leftKeyPressed)
             {
                 position.X -= movementSpeed;
             }
             
-            // If Right is pressed, increase position X
+            // If Right is pressed, increase Position X
             if (rightKeyPressed)
             {
                 position.X += movementSpeed;
+            }
+
+            if (spaceKeyPressed && !cooldownTimer.Active)
+            {
+                Vector2 projectilePosition;
+                Vector2 projectileVelocity;
+
+                projectilePosition = new Vector2(position.X + (SpriteWidth / 2), position.Y + (SpriteHeight / 2));
+                projectileVelocity = new Vector2(10.0f, 0f);
+                root.FireProjectile(projectilePosition, projectileVelocity, "Projectile");
+                cooldownTimer.StartTimer();
+
             }
         }
 
@@ -74,6 +91,9 @@ namespace ArcadeFlyer2D
 
             // Handle any movement input
             HandleInput(currentKeyboardState);
+
+            cooldownTimer.Update(gameTime);
+
         }
     }
 }
