@@ -16,24 +16,24 @@ namespace ArcadeFlyer2D
 
         public Timer(float totalTime)
         {
-            this.endTIme = endTime;
-            this.currentTime = 0.0f;
+            this.totalTime = totalTime;
+            this.timer = 0.0f;
             this.Active = false;
         }
 
         public void StartTimer()
         {
             Active = true;
-            currentTime = 0.0f;
+            timer = 0.0f;
         }
 
         public void Update(GameTime gameTime)
         {
             if (Active)
             {
-                currentTime = currentTime + (float)gameTime.ElapsedGameTime.TotalSeconds;
+                timer = timer + (float)gameTime.ElapsedGameTime.TotalSeconds;
 
-                if (currentTime >= endTime)
+                if (timer >= totalTime)
                 {
                     Active = false;
                 }

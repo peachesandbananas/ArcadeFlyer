@@ -120,18 +120,17 @@ namespace ArcadeFlyer2D
             spriteBatch.End();
         }
 
-        public void FireProjectile(Vector2 position, Vector2 velocity, string projectileType)
+        public void FireProjectile(Vector2 position, Vector2 velocity, ProjectileType projectileType)
         {
             Texture2D projectileTexture;
-            if (projectileType == "enemy")
-            {
-                projectileTexture = enemyProjectileSprite;
-            }
-            if (projectileType == "player")
+            if (projectileType == ProjectileType.Player)
             {
                 projectileTexture = playerProjectileSprite;
             }
-
+            else
+            {
+                projectileTexture = enemyProjectileSprite;
+            }
             Projectile firedProjectile = new Projectile(position, velocity, projectileTexture);
             projectiles.Add(firedProjectile);
         }

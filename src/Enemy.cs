@@ -23,7 +23,7 @@ namespace ArcadeFlyer2D
             this.SpriteWidth = 128.0f;
             this.velocity = new Vector2(-1.0f, 5.0f);
 
-            projectileCoolDown = new Timer(3.0f);
+            projectileCooldown = new Timer(0.5f);
 
             // Load the content for this enemy
             LoadContent();
@@ -39,8 +39,11 @@ namespace ArcadeFlyer2D
         // Called each frame
         public void Update(GameTime gameTime)
         {
+
             // Handle movement
             position += velocity;
+
+            projectileCooldown.Update(gameTime);
 
             // Bounce on top and bottom
             if (position.Y < 0 || position.Y > (root.ScreenHeight - SpriteHeight))
@@ -49,14 +52,14 @@ namespace ArcadeFlyer2D
             }
             if (!projectileCooldown.Active)
             {
-                Vector2 projectilePosition = new Vector2();
-                projectilePosition.X = position.X;
-                projectilePosition.Y = position.Y + (SpriteHeight / 3);
-                Vector2 projectileVelocity = new Vector2();
-                projectileVelocity.X = -5.0f;
-                projectileVelocity.Y = 0f;
-                root.FireProjectile(projectilePosition, projectileVelocity, "enemyFire");
+                projectileCooldown.StartTimer();
+                Vector2 projectilePosition = new Vector2(position.X, position.Y + SpriteHeight / 2);
+                Vector2 projectileVelocity = new Vector2(-5.0f, 0.0f);
+                root.FireProjectile(projectilePosition, projectileVelocity, ProjectileType.Enemy);
             }
+
+            
+
         }
     }
 }
