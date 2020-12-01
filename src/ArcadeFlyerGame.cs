@@ -16,6 +16,12 @@ namespace ArcadeFlyer2D
         // The player
         private Player player;
 
+        // Number of lives
+        private int life = 20;
+
+        // Score
+        private int score = 0;
+
         private List<Enemy> enemies;
 
         // An enemy
@@ -27,6 +33,11 @@ namespace ArcadeFlyer2D
         private Texture2D playerProjectileSprite;
 
         private Texture2D enemyProjectileSprite;
+
+        // Font for drawing text
+        private SpriteFont textFont;
+
+        private bool gameOver = false;
 
         // Screen width
         private int screenWidth = 1600;
@@ -68,7 +79,7 @@ namespace ArcadeFlyer2D
             // Initialize an enemy to be on the right side
             enemies.Add(new Enemy(this, new Vector2(screenWidth, 0)));
 
-            enemyCreationTimer = new Timer(0.5f);
+            enemyCreationTimer = new Timer(1.0f);
             enemyCreationTimer.StartTimer();
             projectiles = new List<Projectile>();
 
@@ -89,6 +100,7 @@ namespace ArcadeFlyer2D
             spriteBatch = new SpriteBatch(GraphicsDevice);
             playerProjectileSprite = Content.Load<Texture2D>("Projectile");   
             enemyProjectileSprite = Content.Load<Texture2D>("EnemyFire");     
+            textFont = Content.Load<SpriteFont>("Text");
         }
 
         // Called every frame
@@ -96,6 +108,12 @@ namespace ArcadeFlyer2D
         {   
             // Update base game
             base.Update(gameTime);
+
+            // Jump out early if the game is over!
+            if (gameOver)
+            {
+                return;
+            }
 
             // Update the components
             player.Update(gameTime);
@@ -116,6 +134,12 @@ namespace ArcadeFlyer2D
                 if (!isPlayerProjectile && player.Overlaps(p))
                 {
                     projectiles.Remove(p);
+                    life -= 1;
+
+                    if (life == 0)
+                    {
+                        gameOver = true;
+                    }
                 }
                 //Is this a player projectile? And, if it is, did it hit my enemy?
                 else if (isPlayerProjectile)
@@ -128,6 +152,7 @@ namespace ArcadeFlyer2D
                         {
                             projectiles.Remove(p);
                             enemies.Remove(e);
+                            score += 1000;
                         }
                     }
                 }
@@ -152,7 +177,10 @@ namespace ArcadeFlyer2D
             spriteBatch.Begin();
 
             // Draw the components
-            player.Draw(gameTime, spriteBatch);
+            if (!gameOver)
+            {
+                player.Draw(gameTime, spriteBatch);
+            }
             foreach(Enemy enemy in enemies)
             {
                 enemy.Draw(gameTime, spriteBatch);
@@ -162,6 +190,17 @@ namespace ArcadeFlyer2D
                 p.Draw(gameTime, spriteBatch);
             }
 
+            // Draw the score and lives!
+            string scoreString = "Score: " + score.ToString();
+            string livesString = "Lives: " + life.ToString();
+            
+            spriteBatch.DrawString(textFont, livesString, new Vector2(0f, 20f), Color.Black);
+
+            if (gameOver)
+            {
+                spriteBatch.DrawString(textFont, "Game Over!", new Vector2(screenWidth/2, screenHeight/2), Color.White);
+            }
+            
             // End batch draw
             spriteBatch.End();
         }

@@ -61,3 +61,10 @@
 /processorParam:TextureFormat=Color
 /build:Projectile.png
 
+#begin Text.spritefont
+/importer:FontDescriptionImporter
+/processor:LocalizedFontProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:Text.spritefont
+
