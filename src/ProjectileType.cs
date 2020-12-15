@@ -1,8 +1,9 @@
 namespace ArcadeFlyer2D
-{
-    public enum ProjectileType
+{   
+    // The type of a Projectile
+    enum ProjectileType
     {
-        Player,
-        Enemy
+        Player, /* A projectile fired by a player */
+        Enemy /* A projectile fired by an enemy */
     }
 }

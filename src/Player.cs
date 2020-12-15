@@ -13,17 +13,17 @@ namespace ArcadeFlyer2D
         // The speed at which the player can move
         private float movementSpeed = 4.0f;
 
-        private Timer cooldownTimer;
+        // Cool down timer for projectiles
+        private Timer projectileCoolDown;
 
         // Initialize a player
-        public Player(ArcadeFlyerGame root, Vector2 Position) : base(Position)
+        public Player(ArcadeFlyerGame root, Vector2 position) : base(position)
         {
             // Initialize values
             this.root = root;
-            this.Position = Position;
+            this.position = position;
             this.SpriteWidth = 128.0f;
-
-            cooldownTimer = new Timer(0.5f);
+            this.projectileCoolDown = new Timer(0.5f);
 
             // Load the content for the player
             LoadContent();
@@ -36,7 +36,7 @@ namespace ArcadeFlyer2D
             this.SpriteImage = root.Content.Load<Texture2D>("MainChar");
         }
 
-        // Update Position based on input
+        // Update position based on input
         private void HandleInput(KeyboardState currentKeyboardState)
         {
             // Get all the key states
@@ -44,42 +44,43 @@ namespace ArcadeFlyer2D
             bool downKeyPressed = currentKeyboardState.IsKeyDown(Keys.S);
             bool leftKeyPressed = currentKeyboardState.IsKeyDown(Keys.A);
             bool rightKeyPressed = currentKeyboardState.IsKeyDown(Keys.D);
-            bool spaceKeyPressed = currentKeyboardState.IsKeyDown(Keys.Space);
 
-            // If Up is pressed, decrease Position Y
+            // If Up is pressed, decrease position Y
             if (upKeyPressed)
             {
                 position.Y -= movementSpeed;
             }
             
-            // If Down is pressed, increase Position Y
+            // If Down is pressed, increase position Y
             if (downKeyPressed)
             {
                 position.Y += movementSpeed;
             }
             
-            // If Left is pressed, decrease Position X
+            // If Left is pressed, decrease position X
             if (leftKeyPressed)
             {
                 position.X -= movementSpeed;
             }
             
-            // If Right is pressed, increase Position X
+            // If Right is pressed, increase position X
             if (rightKeyPressed)
             {
                 position.X += movementSpeed;
             }
 
-            if (spaceKeyPressed && !cooldownTimer.Active)
+            // If able to fire projectiles and Space is pressed...
+            if (!projectileCoolDown.Active && currentKeyboardState.IsKeyDown(Keys.Space))
             {
-                Vector2 projectilePosition;
-                Vector2 projectileVelocity;
+                // Generate the projectile information
+                Vector2 projectilePosition = new Vector2(position.X + SpriteWidth, position.Y + SpriteHeight / 2);
+                Vector2 projectileVelocity = new Vector2(10.0f, 0.0f);
 
-                projectilePosition = new Vector2(position.X + (SpriteWidth / 2), position.Y + (SpriteHeight / 2));
-                projectileVelocity = new Vector2(10.0f, 0f);
+                // Fire the projectile from the main game
                 root.FireProjectile(projectilePosition, projectileVelocity, ProjectileType.Player);
-                cooldownTimer.StartTimer();
 
+                // Start the cool down process
+                projectileCoolDown.StartTimer();
             }
         }
 
@@ -91,8 +92,9 @@ namespace ArcadeFlyer2D
 
             // Handle any movement input
             HandleInput(currentKeyboardState);
-
-            cooldownTimer.Update(gameTime);
+            
+            // Update the cool down timer
+            projectileCoolDown.Update(gameTime);
         }
     }
 }
