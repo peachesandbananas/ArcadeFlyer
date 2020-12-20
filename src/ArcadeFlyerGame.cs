@@ -261,7 +261,7 @@ namespace ArcadeFlyer2D
                 Vector2 textPosition = new Vector2(screenWidth/2, screenHeight/2);
                 if (checkWin)
                 {
-                    spriteBatch.DrawString(textFont, "Congratulations! You won!", textPosition, Color.White);
+                    spriteBatch.DrawString(textFont, "Congratulations! You won!\nYour score was " + score + ".", textPosition, Color.White);
                 }
                 else
                 {

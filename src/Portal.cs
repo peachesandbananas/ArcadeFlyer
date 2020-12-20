@@ -28,6 +28,7 @@ namespace ArcadeFlyer2D
         }
 
         // Called each frame
+        // Deprecated :-(
         public void Update(GameTime gameTime, bool nextLevel)
         {
             if (nextLevel)
